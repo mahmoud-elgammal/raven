@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # Raven service
+  raven:
+    image: raven  # Docker image for the Raven service
+    ports:
+      - 8080:8080  # Map host port 8080 to container port 8080
+
+    environment:
+      - PORT=8080  # Set the PORT environment variable to 8080
+
+  # Neo4j service
+  neo4j:
+    image: neo4j  # Docker image for the Neo4j database
+    ports:
+      - 7474:7474  # Map host port 7474 to container port 7474 (HTTP)
+      - 7687:7687  # Map host port 7687 to container port 7687 (Bolt)
+    environment:
+      - NEO4J_AUTH=neo4j/password  # Set authentication for Neo4j
+
+  # Redis service
+  redis:
+    image: redis  # Docker image for the Redis in-memory data store
+    ports:
+      - 6379:6379  # Map host port 6379 to container port 6379
+
+  # MinIO service
+  minio:
+    image: minio/minio  # Docker image for MinIO
+    ports:
+      - 9000:9000  # Map host port 9000 to container port 9000
+    environment:
+      - MINIO_ACCESS_KEY=minioadmin  # Set MinIO access key
+      - MINIO_SECRET_KEY=minioadmin  # Set MinIO secret key
+    command: server /data  # Command to run MinIO server with /data as the storage directory
+    volumes:
+      - minio-data:/data  # Mount volume for persistent storage
+
+volumes:
+  minio-data:
